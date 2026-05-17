@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Anytime Data</title>
+</head>
+<body>
+
+<h1>エニタイム店舗データ</h1>
+
+<div id="app"></div>
+
+<script>
+fetch("data.json")
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("app").innerHTML =
+      data.map(d => `
+        <div style="border:1px solid #333; padding:10px; margin:10px;">
+          <div><b>${d.slug}</b></div>
+          <div>${d.price ?? "不明"}</div>
+          <div>${d.address ?? "不明"}</div>
+          <a href="${d.url}" target="_blank">開く</a>
+        </div>
+      `).join("");
+  });
+</script>
+
+</body>
+</html>
