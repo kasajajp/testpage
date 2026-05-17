@@ -1,0 +1,35 @@
+name: scrape-anytime
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: install deps
+        run: |
+          pip install -r requirements.txt
+          playwright install chromium
+
+      - name: run scraper
+        run: python scraper.py
+
+      - name: commit data
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add data.json
+          git commit -m "update data" || exit 0
+          git push
